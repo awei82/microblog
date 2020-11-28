@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 app.config.from_object(Config)
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, engine_options={'connect_args':{'check_same_thread': False}})
 migrate = Migrate(app, db)
 
 
