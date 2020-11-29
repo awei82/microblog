@@ -18,3 +18,4 @@ build/
 .win_venv
 
 *.db
+.*env
