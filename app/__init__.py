@@ -12,7 +12,7 @@ import os
 app = Flask(__name__)
 app.config.from_object(Config)
 
-db = SQLAlchemy(app, engine_options={'connect_args':{'check_same_thread': False}})
+db = SQLAlchemy(app, engine_options={'connect_args': {'check_same_thread': False}})
 migrate = Migrate(app, db)
 
 login = LoginManager(app)
