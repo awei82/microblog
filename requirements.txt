@@ -13,3 +13,7 @@ MarkupSafe~=1.1.1
 
 flask-sqlalchemy
 flask-migrate
+
+flask-login
+email-validator
+
