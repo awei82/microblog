@@ -18,4 +18,5 @@ build/
 .win_venv
 
 *.db
-.*env
+.env
+.flaskenv
