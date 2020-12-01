@@ -26,3 +26,5 @@ class Config(object):
     SECURITY_EMAIL_SENDER = os.environ.get('SECURITY_EMAIL_SENDER')
 
     POSTS_PER_PAGE = 25
+
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
