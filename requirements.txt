@@ -24,4 +24,5 @@ elasticsearch
 cryptography
 
 psycopg2
+pymysql
 gunicorn
