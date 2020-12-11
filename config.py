@@ -5,6 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 dotenv_path = os.path.join(basedir, '.flaskenv')
 load_dotenv(dotenv_path)
 
+
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or "test-secret"
 
@@ -28,3 +29,5 @@ class Config(object):
     POSTS_PER_PAGE = 25
 
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+
+    LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')

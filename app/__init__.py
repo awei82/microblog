@@ -13,8 +13,9 @@ import os
 
 from elasticsearch import Elasticsearch
 
-
-db = SQLAlchemy(engine_options={'connect_args': {'check_same_thread': False}})
+# 'check_same_thread': False needed for SQLite?
+# db = SQLAlchemy(engine_options={'connect_args': {'check_same_thread': False}})
+db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
@@ -63,17 +64,35 @@ def create_app(config_class=Config):
             mail_handler.setLevel(logging.ERROR)
             app.logger.addHandler(mail_handler)
 
-        if not os.path.exists('logs'):
-            os.mkdir('logs')
-        file_handler = RotatingFileHandler('logs/microblog.log', maxBytes=10240,
-                                           backupCount=10)
-        file_handler.setFormatter(logging.Formatter(
-            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
-        file_handler.setLevel(logging.INFO)
-        app.logger.addHandler(file_handler)
+            if app.config['LOG_TO_STDOUT']:
+                stream_handler = logging.StreamHandler()
+                stream_handler.setLevel(logging.INFO)
+                app.logger.addHandler(stream_handler)
+            else:
+                if not os.path.exists('logs'):
+                    os.mkdir('logs')
+                file_handler = RotatingFileHandler('logs/microblog.log',
+                                                   maxBytes=10240, backupCount=10)
+                file_handler.setFormatter(logging.Formatter(
+                    '%(asctime)s %(levelname)s: %(message)s '
+                    '[in %(pathname)s:%(lineno)d]'))
+                file_handler.setLevel(logging.INFO)
+                app.logger.addHandler(file_handler)
 
-        app.logger.setLevel(logging.INFO)
-        app.logger.info('Microblog startup')
+            app.logger.setLevel(logging.INFO)
+            app.logger.info('Microblog startup')
+
+        # if not os.path.exists('logs'):
+        #     os.mkdir('logs')
+        # file_handler = RotatingFileHandler('logs/microblog.log', maxBytes=10240,
+        #                                    backupCount=10)
+        # file_handler.setFormatter(logging.Formatter(
+        #     '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+        # file_handler.setLevel(logging.INFO)
+        # app.logger.addHandler(file_handler)
+        #
+        # app.logger.setLevel(logging.INFO)
+        # app.logger.info('Microblog startup')
 
     return app
 

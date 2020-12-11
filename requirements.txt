@@ -21,3 +21,7 @@ flask-bootstrap
 flask-moment
 
 elasticsearch
+cryptography
+
+psycopg2
+gunicorn
