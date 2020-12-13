@@ -1,6 +1,11 @@
 replace flask-moment w/ luxon
 upgrade bootstrap version
 
-- reindex ES at startup - add as a flask command?
-- remove sqlalchemy 'check_same_thread' option
+- add edit profile section - chenge pass, change email, profile pic
+- add users tab
+- add custom blog name
+- add emoji support
+- add @'s
+- add notifications
+- likes
 - tests!
