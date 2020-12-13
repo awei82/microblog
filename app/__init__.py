@@ -47,6 +47,9 @@ def create_app(config_class=Config):
     from app.main import bp as main_bp
     app.register_blueprint(main_bp)
 
+    from app.util import filters
+    filters.register(app)
+
     if not app.debug and not app.testing:
         if app.config['MAIL_SERVER']:
             auth = None
@@ -89,7 +92,6 @@ def create_app(config_class=Config):
         #     '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
         # file_handler.setLevel(logging.INFO)
         # app.logger.addHandler(file_handler)
-
 
     return app
 

@@ -5,8 +5,10 @@ upgrade bootstrap version
 - add users tab
 - add custom blog name
 - add emoji support
-- add @'s
 - add notifications
 - likes
 - tests!
 - redis
+- delete user
+- admin panel
+- urls - DONE
