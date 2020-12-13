@@ -49,6 +49,12 @@
 {% block scripts %}
     {{ super() }}
     {{ moment.include_moment() }}
+
+    <script>
+        $(function() {
+        // write start up code here
+    });
+    </script>
 {% endblock %}
 
 {% block content %}
