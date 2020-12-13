@@ -45,8 +45,19 @@ def explore():
         page, current_app.config['POSTS_PER_PAGE'], False)
     next_url = url_for('main.explore', page=posts.next_num) if posts.has_next else None
     prev_url = url_for('main.explore', page=posts.prev_num) if posts.has_prev else None
-    return render_template("index.html", title='Explore', posts=posts.items,
-                           next_url=next_url, prev_url=prev_url)
+    return render_template("index.html", title='Explore', posts=posts.items, next_url=next_url, prev_url=prev_url)
+
+
+@bp.route('/users')
+@login_required
+def users():
+    page = request.args.get('page', 1, type=int)
+    users = User.query.order_by(User.id.desc()).paginate(
+        page, current_app.config['POSTS_PER_PAGE'], False)
+    next_url = url_for('main.explore', page=users.next_num) if users.has_next else None
+    prev_url = url_for('main.explore', page=users.prev_num) if users.has_prev else None
+    form = EmptyForm()
+    return render_template("users.html", title='Users', users=users.items, next_url=next_url, prev_url=prev_url, form=form)
 
 
 @bp.route('/user/<username>')
@@ -59,8 +70,7 @@ def user(username):
     next_url = url_for('main.user', username=user.username, page=posts.next_num) if posts.has_next else None
     prev_url = url_for('main.user', username=user.username, page=posts.prev_num) if posts.has_prev else None
     form = EmptyForm()
-    return render_template('user.html', user=user, posts=posts.items,
-                           next_url=next_url, prev_url=prev_url, form=form)
+    return render_template('user.html', user=user, posts=posts.items, next_url=next_url, prev_url=prev_url, form=form)
 
 
 @bp.route('/user/<username>/popup')
@@ -84,8 +94,7 @@ def edit_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='Edit Profile',
-                           form=form)
+    return render_template('edit_profile.html', title='Edit Profile', form=form)
 
 
 @bp.route('/follow/<username>', methods=['POST'])
@@ -140,5 +149,4 @@ def search():
         if total > page * current_app.config['POSTS_PER_PAGE'] else None
     prev_url = url_for('main.search', q=g.search_form.q.data, page=page - 1) \
         if page > 1 else None
-    return render_template('search.html', title='Search', posts=posts,
-                           next_url=next_url, prev_url=prev_url)
+    return render_template('search.html', title='Search', posts=posts, next_url=next_url, prev_url=prev_url)

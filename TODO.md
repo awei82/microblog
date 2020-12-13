@@ -9,3 +9,4 @@ upgrade bootstrap version
 - add notifications
 - likes
 - tests!
+- redis
