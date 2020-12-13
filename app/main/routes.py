@@ -49,7 +49,8 @@ def explore():
     prev_url = url_for('main.explore', page=posts.prev_num) if posts.has_prev else None
     usernames = db.session.query(User.username).all()
     usernames = [x[0] for x in usernames]
-    return render_template("index.html", title='Explore', posts=posts.items, next_url=next_url, prev_url=prev_url, usernames=usernames)
+    return render_template("index.html", title='Explore',
+                           posts=posts.items, next_url=next_url, prev_url=prev_url, usernames=usernames)
 
 
 @bp.route('/users')
@@ -61,7 +62,8 @@ def users():
     next_url = url_for('main.explore', page=users.next_num) if users.has_next else None
     prev_url = url_for('main.explore', page=users.prev_num) if users.has_prev else None
     form = EmptyForm()
-    return render_template("users.html", title='Users', users=users.items, next_url=next_url, prev_url=prev_url, form=form)
+    return render_template("users.html", title='Users',
+                           users=users.items, next_url=next_url, prev_url=prev_url, form=form)
 
 
 @bp.route('/user/<username>')
@@ -76,7 +78,8 @@ def user(username):
     form = EmptyForm()
     usernames = db.session.query(User.username).all()
     usernames = [x[0] for x in usernames]
-    return render_template('user.html', user=user, posts=posts.items, next_url=next_url, prev_url=prev_url,
+    return render_template('user.html', title=user.username,
+                           user=user, posts=posts.items, next_url=next_url, prev_url=prev_url,
                            form=form, usernames=usernames)
 
 
@@ -168,9 +171,9 @@ def send_message(recipient):
         msg = Message(author=current_user, recipient=user, body=form.message.data)
         db.session.add(msg)
         db.session.commit()
-        flash(_('Your message has been sent.'))
+        flash('Your message has been sent.')
         return redirect(url_for('main.user', username=recipient))
-    return render_template('send_message.html', title=_('Send Message'), form=form, recipient=recipient)
+    return render_template('send_message.html', title='Send Message', form=form, recipient=recipient)
 
 
 @bp.route('/messages')
@@ -184,4 +187,5 @@ def messages():
         if messages.has_next else None
     prev_url = url_for('main.messages', page=messages.prev_num) \
         if messages.has_prev else None
-    return render_template('messages.html', messages=messages.items, next_url=next_url, prev_url=prev_url)
+    return render_template('messages.html', title='Messages',
+                           messages=messages.items, next_url=next_url, prev_url=prev_url)
