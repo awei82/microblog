@@ -11,4 +11,4 @@ upgrade bootstrap version
 - redis
 - delete user
 - admin panel
-- urls - DONE
+- edit/delete posts
