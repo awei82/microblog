@@ -13,7 +13,7 @@
                 </span>
                 said {{ moment(post.timestamp).fromNow() }}:
                 <br>
-                <span id="post{{ post.id }}">{{ post.body }}</span>
+                <span id="post{{ post.id }}">{{ post.body | urlize(40, true) }}</span>
             </td>
         </tr>
     </table>
