@@ -94,15 +94,17 @@ def user_popup(username):
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
-    form = EditProfileForm(current_user.username)
+    form = EditProfileForm(current_user.username, current_user.email)
     if form.validate_on_submit():
         current_user.username = form.username.data
+        current_user.email = form.email.data
         current_user.about_me = form.about_me.data
         db.session.commit()
         flash('Your changes have been saved.')
         return redirect(url_for('main.edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
+        form.email.data = current_user.email
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile', form=form)
 
@@ -115,16 +117,16 @@ def follow(username):
         user = User.query.filter_by(username=username).first()
         if user is None:
             flash('User {} not found.'.format(username))
-            return redirect(url_for('main.index'))
+            return redirect(request.referrer)
         if user == current_user:
             flash('You cannot follow yourself!')
-            return redirect(url_for('main.user', username=username))
+            return redirect(request.referrer)
         current_user.follow(user)
         db.session.commit()
         flash('You are following {}!'.format(username))
-        return redirect(url_for('main.user', username=username))
+        return redirect(request.referrer)
     else:
-        return redirect(url_for('main.index'))
+        return redirect(request.referrer)
 
 
 @bp.route('/unfollow/<username>', methods=['POST'])
@@ -135,16 +137,16 @@ def unfollow(username):
         user = User.query.filter_by(username=username).first()
         if user is None:
             flash('User {} not found.'.format(username))
-            return redirect(url_for('main.index'))
+            return redirect(request.referrer)
         if user == current_user:
             flash('You cannot unfollow yourself!')
-            return redirect(url_for('main.user', username=username))
+            return redirect(request.referrer)
         current_user.unfollow(user)
         db.session.commit()
         flash('You are not following {}.'.format(username))
-        return redirect(url_for('main.user', username=username))
+        return redirect(request.referrer)
     else:
-        return redirect(url_for('main.index'))
+        return redirect(request.referrer)
 
 
 @bp.route('/search')
@@ -202,3 +204,15 @@ def notifications():
                      'data': n.get_data(),
                      'timestamp': n.timestamp
                      } for n in notifications])
+
+
+@bp.route('/export_posts')
+@login_required
+def export_posts():
+    if current_user.get_task_in_progress('export_posts'):
+        flash('An export task is currently in progress')
+    else:
+        flash('Export task started.')
+        current_user.launch_task('export_posts', 'Exporting posts...')
+        db.session.commit()
+    return redirect(url_for('main.user', username=current_user.username))

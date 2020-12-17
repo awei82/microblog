@@ -7,6 +7,8 @@ load_dotenv(dotenv_path)
 
 
 class Config(object):
+    BLOG_NAME = os.environ.get('BLOG_NAME') or 'Microblog'
+
     SECRET_KEY = os.environ.get('SECRET_KEY') or "test-secret"
 
     if not SECRET_KEY:
@@ -29,5 +31,7 @@ class Config(object):
     POSTS_PER_PAGE = 25
 
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+
+    REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'
 
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
