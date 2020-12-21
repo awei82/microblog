@@ -1,0 +1,16 @@
+[flake8]
+ignore = E501, W292
+
+
+exclude =
+    .git,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist,
+    .venv,
+    .win_venv,
+    migrations
+
+max-complexity = 10
