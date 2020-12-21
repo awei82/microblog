@@ -1,6 +1,6 @@
 FROM python:3.6-alpine
 
-RUN apk add gcc musl-dev python3-dev libffi-dev openssl-dev libpq-dev
+RUN apk add gcc musl-dev python3-dev libffi-dev openssl-dev postgresql-dev
 
 RUN adduser -D microblog
 
