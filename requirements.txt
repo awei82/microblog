@@ -27,6 +27,7 @@ MarkupSafe==1.1.1
 psycopg2==2.8.6
 pycparser==2.20
 PyJWT==1.7.1
+PyMySQL==0.10.1
 python-dateutil==2.8.1
 python-dotenv==0.15.0
 python-editor==1.0.4
