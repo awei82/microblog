@@ -10,8 +10,9 @@ on:
     tags:
       - v*
 
-  # Run tests for any PRs.
+  # Run tests for PRs to `main`.
   pull_request:
+    branches: [main]
 
 env:
   # TODO: Change variable to your image's name.
