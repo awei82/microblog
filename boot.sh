@@ -2,7 +2,7 @@
 source .venv/bin/activate
 while true; do
     echo Upgrading database
-    flask db upgrade
+    DATABSE_URL=$DATABASE_ADMIN_URL flask db upgrade
     if [[ "$?" == "0" ]]; then
         break
     fi
