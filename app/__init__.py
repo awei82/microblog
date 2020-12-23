@@ -4,7 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_bootstrap import Bootstrap
+#from flask_bootstrap import Bootstrap
+import flask_bootstrap
+flask_bootstrap.BOOTSTRAP_VERSION = '4.5.3'
+flask_bootstrap.JQUERY_VERSION = '3.5.1'
+Bootstrap = flask_bootstrap.Bootstrap
+
 from flask_moment import Moment
 from werkzeug.middleware.proxy_fix import ProxyFix
 
