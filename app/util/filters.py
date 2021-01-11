@@ -8,7 +8,7 @@ def register(app):
         """ convert @ mentions in text to links to user profiles
             Regex based on https://www.regextester.com/95875
         """
-        mentions = re.findall('\s([@][\w_-]+)', text)
+        mentions = re.findall('(\s|^)([@][\w_-]+)', text)
         valid_mentions = [m for m in mentions if m[1:] in usernames]
 
         for vm in valid_mentions:
