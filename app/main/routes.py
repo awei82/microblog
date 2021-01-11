@@ -6,6 +6,8 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post, Message, Notification
 
 from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
 
 
 @bp.before_request
@@ -102,7 +104,13 @@ def edit_profile():
         current_user.email = form.email.data
         current_user.about_me = form.about_me.data
         db.session.commit()
-        flash('Your changes have been saved.')
+
+        # save profile photo
+        if form.profile_photo.data:
+            image_data = request.files[form.profile_photo.name]
+            image_data.save(os.path.join('app/static', 'profile_photos', str(current_user.id) + '.jpg'))
+
+        flash('Your changes have been saved. Profile photo changes may take a moment to load.')
         return redirect(url_for('main.edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
@@ -218,3 +226,4 @@ def export_posts():
         current_user.launch_task('export_posts', 'Exporting posts...')
         db.session.commit()
     return redirect(url_for('main.user', username=current_user.username))
+

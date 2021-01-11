@@ -11,7 +11,7 @@ from app import db, login
 from app.search import add_to_index, remove_from_index, query_index
 
 from flask_login import UserMixin
-from flask import current_app
+from flask import current_app, send_from_directory
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
@@ -113,9 +113,14 @@ class User(PaginatedAPIMixin, UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def avatar(self, size):
-        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
-            digest, size)
+        default = os.path.join('app/static', 'profile_photos', str(self.id) + '.jpg')
+
+        if not os.path.exists(default):
+            digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+            return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
+                digest, size)
+        else:
+            return url_for('static', filename=f'profile_photos/{self.id}.jpg')
 
     def follow(self, user):
         if not self.is_following(user):

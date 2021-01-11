@@ -35,3 +35,5 @@ class Config(object):
     REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'
 
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
+
+    UPLOAD_FOLDER = 'static'

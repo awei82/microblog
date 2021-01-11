@@ -1,14 +1,16 @@
 from flask import request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField
+from wtforms import StringField, SubmitField, TextAreaField, FileField
 from wtforms.validators import ValidationError, DataRequired, Length
 from app.models import User
+import os
 
 
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
+    profile_photo = FileField('Profile Photo (please keep to no larger than 256px x 256px)')
     submit = SubmitField('Submit')
 
     def __init__(self, original_username, original_email, *args, **kwargs):
@@ -23,11 +25,25 @@ class EditProfileForm(FlaskForm):
                 raise ValidationError('Please use a different username.')
 
     def validate_email(self, email):
+        print('### validate_email ###')
         if email.data != self.original_email:
             user = User.query.filter_by(email=self.email.data).first()
             if user is not None:
                 raise ValidationError('Please use a different email.')
 
+    def validate_profile_photo(self, profile_photo):
+        print('### vaildate_profile_photo ###')
+
+        ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
+        if profile_photo.data.filename.rsplit('.', 1)[-1].lower() not in ALLOWED_EXTENSIONS:
+            raise ValidationError(f'Only allowed extensions are: {ALLOWED_EXTENSIONS}.')
+
+        file = profile_photo.data
+        file.seek(0, os.SEEK_END)
+        file_length = file.tell()
+        file.seek(0,0)
+        if file_length > 100000:
+            raise ValidationError('Image too large. Must be under 100KB')
 
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
