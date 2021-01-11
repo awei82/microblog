@@ -108,6 +108,13 @@ def create_app(config_class=Config):
         # file_handler.setLevel(logging.INFO)
         # app.logger.addHandler(file_handler)
 
+        # create static directories
+        try:
+            os.makedirs('static/profile_photos')
+        except FileExistsError:
+            pass
+
+
     return app
 
 
