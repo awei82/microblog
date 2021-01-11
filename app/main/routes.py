@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, g, current_app, jsonify
 from app import db
-from app.main.forms import EditProfileForm, EmptyForm, PostForm, SearchForm, MessageForm
+from app.main.forms import EditProfileForm, EmptyForm, PostForm, SearchForm, MessageForm, EditPostForm
 from app.main import bp
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post, Message, Notification
@@ -227,3 +227,41 @@ def export_posts():
         db.session.commit()
     return redirect(url_for('main.user', username=current_user.username))
 
+
+@bp.route('/post/<id>')
+@login_required
+def post(id):
+    post = Post.query.filter_by(id=id).first_or_404()
+    form = EmptyForm()
+    usernames = db.session.query(User.username).all()
+    usernames = [x[0] for x in usernames]
+    return render_template('post.html', title=f'Post: {id}',
+                           post=post, form=form, author=post.author.username, usernames=usernames)
+
+
+@bp.route('/edit_post/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_post(id):
+    post = Post.query.filter_by(id=id).first_or_404()
+
+    form = EditPostForm()
+
+    if form.validate_on_submit():
+        if form.submit.data:
+            post.body = form.post.data
+            post.updated_timestamp = datetime.utcnow()
+            db.session.commit()
+            flash('Your post has been updated.')
+            return redirect(url_for('main.post', id=id))
+        elif form.delete.data:
+            db.session.delete(post)
+            db.session.commit()
+            flash('Your post has been deleted.')
+            return redirect(url_for('main.index'))
+
+    elif request.method == 'GET':
+        form.post.data = post.body
+        usernames = db.session.query(User.username).all()
+        usernames = [x[0] for x in usernames]
+    return render_template('edit_post.html', title=f'Edit Post: {id}',
+                           post=post, form=form, author=post.author.username, usernames=usernames)

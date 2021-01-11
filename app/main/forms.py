@@ -54,6 +54,13 @@ class PostForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class EditPostForm(FlaskForm):
+    post = TextAreaField('Edit post', validators=[DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')
+    delete = SubmitField('Delete Post', render_kw={'onclick': "return confirm('Confirm delete?');"})
+    # cancel = SubmitField('Cancel Editing')
+
+
 class SearchForm(FlaskForm):
     q = StringField('Search', validators=[DataRequired()])
 
